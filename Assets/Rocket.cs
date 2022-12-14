@@ -32,23 +32,29 @@ public class Rocket : MonoBehaviour, IWeaponable
     private void Update()
     {
         if(!isFired) return;
-        CollisionHandle();
-        transform.position += transform.forward * speed * Time.deltaTime;
+        float frameDistance = speed * Time.deltaTime;
+        CollisionHandle(frameDistance);
+        transform.position += transform.forward * frameDistance;
     }
     void EnableSound()
     {
         rocketSound.SetActive(true);
     }
 
-    private void CollisionHandle()
+    private void CollisionHandle(float frameDistance)
     {
-        if(Physics.Raycast(transform.position, transform.forward, out RaycastHit hitInfo,speed * Time.deltaTime))
+        if(Physics.Raycast(transform.position, transform.forward, out RaycastHit hitInfo,frameDistance))
         {
             Instantiate(explosion, hitInfo.point, Quaternion.identity);
+            
             objEnabled[0].transform.parent = null;
             Destroy(objEnabled[0], 0.9f);
             objEnabled[0] = null;
             Destroy(gameObject);
+            if(hitInfo.collider.transform.parent != null && hitInfo.collider.transform.parent.TryGetComponent<Health>(out Health health))
+            {
+                health.TakeDmg(10);
+            }
         }
     }
 }

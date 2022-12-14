@@ -13,10 +13,17 @@ public class Bullet : MonoBehaviour
 
     private void Update()
     {
-        transform.position += transform.forward * speed * Time.deltaTime;
+        float frameDistance = speed * Time.deltaTime;
+        if(Physics.Raycast(transform.position, transform.forward, out RaycastHit hitInfo,frameDistance))
+        {
+            Instantiate(explosion, hitInfo.point, Quaternion.identity);            
+            Destroy(gameObject);
+            if(hitInfo.collider.transform.parent != null && hitInfo.collider.transform.parent.TryGetComponent<Health>(out Health health))
+            {
+                health.TakeDmg(1);
+            }
+        }
+        transform.position += transform.forward * frameDistance;
     }
-    private void OnCollisionEnter(Collision other) {
-        Instantiate(explosion, transform.position, Quaternion.identity);
-        Destroy(gameObject);
-    }
+    
 }
