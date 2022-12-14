@@ -5,7 +5,8 @@ using UnityEngine.InputSystem;
 
 public class Mover : MonoBehaviour
 {
-    [SerializeField] float moveSpeed = 10f;
+    [SerializeField] float moveSpeedH = 10f;
+    [SerializeField] float moveSpeedV = 10f;
     [SerializeField] Transform gun1;
     [SerializeField] ParticleSystem gun1par;
     [SerializeField] ParticleSystem gun2par;
@@ -67,7 +68,7 @@ public class Mover : MonoBehaviour
 
 
         
-        aim.position = transform.position + transform.forward.normalized * aimPos;
+        aim.position = transform.position + transform.forward.normalized * aimPos ;
         aimCanvas.transform.position = Camera.main.WorldToScreenPoint(aim.position);
 
     }
@@ -80,8 +81,8 @@ public class Mover : MonoBehaviour
     {   
         moveVector = Vector2.Lerp(moveVector, mouseDelta, moveDelay);
 
-        float xNew = Mathf.Clamp((localTransform.x + moveVector.x * moveSpeed * Time.deltaTime), -xClamp, xClamp);
-        float yNew = Mathf.Clamp((localTransform.y + moveVector.y * moveSpeed * Time.deltaTime), -yClamp, yClamp);
+        float xNew = Mathf.Clamp((localTransform.x + moveVector.x * moveSpeedH * Time.deltaTime), -xClamp, xClamp);
+        float yNew = Mathf.Clamp((localTransform.y + moveVector.y * moveSpeedV * Time.deltaTime), -yClamp, yClamp);
         transform.localPosition = new Vector3(xNew, yNew, 0);
     }
 
